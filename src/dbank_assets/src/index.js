@@ -2,18 +2,36 @@ import { dbank } from "../../declarations/dbank";
 
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const button = e.target.querySelector("button");
+  const sendButton = e.target.querySelector("#submit-btn");
+  const outputAmount=document.getElementById("withdrawal-amount");
+  const inputAmount=document.getElementById("input-amount");
 
-  const name = document.getElementById("name").value.toString();
+  sendButton.setAttribute("disabled",true);
 
-  button.setAttribute("disabled", true);
-
-  // Interact with foo actor, calling the greet method
-  const greeting = await dbank.greet(name);
-
-  button.removeAttribute("disabled");
-
-  document.getElementById("greeting").innerText = greeting;
-
-  return false;
+  //operations
+  if(inputAmount.value.length>0){
+    const selectedAmount=parseFloat(inputAmount.value);
+    await dbank.topUp(selectedAmount);
+    console.log(selectedAmount);
+  }else{
+    console.log(selectedAmount);
+    const selectedAmount=parseFloat(outputAmount.value);
+    await dbank.withdraw(selectedAmount);
+  }
+  
+  //resetting values
+  checkBalance();
+  inputAmount.value="";
+  outputAmount.value="";
+  sendButton.removeAttribute("disabled");
 });
+
+window.addEventListener("load", function () {
+  checkBalance();
+});
+
+async function checkBalance() {
+  const currentAmount=await dbank.checkBalance();
+  // document.getElementById("value").innerText=currentAmount.toFixed(2);
+  document.getElementById("value").innerText=Math.round(currentAmount*100)/100;
+}
