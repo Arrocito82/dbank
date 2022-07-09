@@ -8,13 +8,13 @@ document.querySelector("form").addEventListener("submit", async (e) => {
 
   sendButton.setAttribute("disabled",true);
 
-  //operations
+  //operations, these are separated if statements,
+  // so that the're independent from each other
   if(inputAmount.value.length>0){
     const selectedAmount=parseFloat(inputAmount.value);
     await dbank.topUp(selectedAmount);
-    console.log(selectedAmount);
-  }else{
-    console.log(selectedAmount);
+  } 
+  if(outputAmount.value.length>0){
     const selectedAmount=parseFloat(outputAmount.value);
     await dbank.withdraw(selectedAmount);
   }
